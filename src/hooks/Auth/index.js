@@ -14,6 +14,7 @@ export function AuthProvider({children}) {
         user:null,
         role:null,
     });
+    
 
 
     const signIn = async ({email,password}) => {

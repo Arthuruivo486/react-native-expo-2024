@@ -1,8 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { BackHandler, Button, StyleSheet, Text, View } from 'react-native';
+import {useAuth} from "../hooks/Auth";
+import { router } from 'expo-router';
+
+
 
 export default function App() {
   const {signIn, SignOut} = useAuth();
+
+  const handleEntrarSuper = async() =>{
+    try{
+      await singIn({email:"super@gamail.com", password:"Super123!"})
+      router.replace("/")
+
+    }catch (error){
+      console.log(e)
+    }
+  }
 
 return (
     <View style={styles.container}>
@@ -10,9 +24,7 @@ return (
       
       <Button 
       title='Singnin Super'
-       onPress={()=>
-       signIn({email:"super@email.com", password:"Super123!"})}
-      
+       onPress={handleEntrarSuper}
       />
       <Button 
       title='Singnin Adm'
@@ -27,9 +39,11 @@ return (
       
       />
       
-      
-      <Button title='Singout' onPress={()=>SignOut()}/>
-      <Button style="auto"/>
+      <Button title ="sobre " onPress={()=>router.push("/about")}/>
+      <Button title="Sair do aplicativo"
+       onPress={()=>BackHandler.exitApp()}
+       
+       />
       <StatusBar style="auto" />
     </View>
   );
@@ -41,6 +55,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    gap:15,
   },
   title: {
     fontFamily:"bold",
