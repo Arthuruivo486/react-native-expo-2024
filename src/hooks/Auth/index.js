@@ -45,9 +45,7 @@ export function AuthProvider({children}) {
         loadStorageData();
     },[])
 
-    useEffect(()=>{
-        console.log("AuthProvider: ",user)
-    },[user]);
+    
 
     const signIn = async ({email,password}) => {
 
@@ -78,11 +76,15 @@ export function AuthProvider({children}) {
     }; 
 
 
+
+
     const signOut = async () =>{
         await AsyncStorage.deletItem("@payment:user");
 
         setUser({});
     };
+
+    
 
     if (user?.autenticated === null ) {
     
@@ -94,15 +96,14 @@ export function AuthProvider({children}) {
             </Text>
 
             <ActivityIndicator size="large" color="#00000f"/>
+
         </View>
         
         );
         
     }
 
-    useEffect(()=>{
-        console.log('AuthProvider: ',user);
-    },[user]);
+  
 
 
     return (
