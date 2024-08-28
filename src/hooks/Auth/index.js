@@ -1,5 +1,6 @@
 import { createContext ,useContext,useEffect,useState} from "react"
 import { useUsersDatabase } from "../../database/useUsersDatabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const AuthContext = createContext({});
 
@@ -18,7 +19,35 @@ export function AuthProvider({children}) {
 
     const {authUser} = useUsersDatabase();
 
+    useEffect(()=> {
 
+        const loadStorageData = async () =>{
+            const storageUser = await AsyncStorage.getItem("@payment:user");
+
+            if (storageUser){
+
+                setUser({
+                    autenticated: true,
+                    user: JSON.parse(storageUser),
+                    role: JSON.parse(storageUser).role,
+                });
+            } else{
+
+                setUser({
+                    autenticated: false,
+                    user: null,
+                    role: null,
+                })
+
+            }
+        };
+
+        loadStorageData();
+    },[])
+
+    useEffect(()=>{
+        console.log("AuthProvider: ",user)
+    },[user]);
 
     const signIn = async ({email,password}) => {
 
@@ -34,6 +63,9 @@ export function AuthProvider({children}) {
             throw new Error("Usuario ou senha invalidos");
 
         }
+
+        await AsyncStorage.setItem("@payment:user", JSON.stringify(response));
+
         
 
         setUser({
@@ -47,9 +79,26 @@ export function AuthProvider({children}) {
 
 
     const signOut = async () =>{
+        await AsyncStorage.deletItem("@payment:user");
 
         setUser({});
     };
+
+    if (user?.autenticated === null ) {
+    
+        return (
+    
+        <View style={{flex: 1 ,justifyContent:"center", alignItems:"center"}}>
+            <Text style={{fontSize: 28,marginTop: 15,}}>
+                Carregando dos dos Usuario
+            </Text>
+
+            <ActivityIndicator size="large" color="#00000f"/>
+        </View>
+        
+        );
+        
+    }
 
     useEffect(()=>{
         console.log('AuthProvider: ',user);
