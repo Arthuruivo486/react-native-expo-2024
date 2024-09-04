@@ -1,127 +1,97 @@
-import { createContext ,useContext,useEffect,useState} from "react"
+import { createContext, useContext, useEffect, useState } from "react";
 import { useUsersDatabase } from "../../database/useUsersDatabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator, Text, View } from "react-native";
 
 const AuthContext = createContext({});
 
-export const ROLE ={
+export const ROLE = {
     SUPER: "SUPER",
     ADM: "ADM",
     USER: "USER"
-}
+};
 
-export function AuthProvider({children}) {
-    const [user ,setUser] = useState({
-        autenticated: null,
-        user:null,
-        role:null,
+export function AuthProvider({ children }) {
+    const [user, setUser] = useState({
+        authenticated: null,
+        user: null,
+        role: null,
     });
 
-    const {authUser} = useUsersDatabase();
+    const { authUser } = useUsersDatabase();
 
-    
-
-    useEffect(()=> {
-
-        const loadStorageData = async () =>{
+    useEffect(() => {
+        const loadStorageData = async () => {
             const storageUser = await AsyncStorage.getItem("@payment:user");
 
-            if (storageUser){
-
+            if (storageUser) {
                 setUser({
-                    autenticated: true,
+                    authenticated: true,
                     user: JSON.parse(storageUser),
                     role: JSON.parse(storageUser).role,
                 });
-            } else{
-
+            } else {
                 setUser({
-                    autenticated: false,
+                    authenticated: false,
                     user: null,
                     role: null,
-                })
-
+                });
             }
         };
 
         loadStorageData();
-    },[])
+    }, []);
 
-    
-
-    const signIn = async ({email,password}) => {
-
-        const response = await authUser({email,password});
+    const signIn = async ({ email, password }) => {
+        const response = await authUser({ email, password });
         console.log(response);
 
-        if(!response){
+        if (!response) {
             setUser({
-                autenticated:false,
-                user:null,
-                role:null,
+                authenticated: false,
+                user: null,
+                role: null,
             });
-            throw new Error("Usuario ou senha invalidos");
-
+            throw new Error("Usuário ou senha inválidos");
         }
 
         await AsyncStorage.setItem("@payment:user", JSON.stringify(response));
 
-        
-
         setUser({
-            autenticated:true,
-            User: response,
+            authenticated: true,
+            user: response,
             role: response.role,
         });
-              
+    };
 
-    }; 
-
-
-
-
-    const signOut = async () =>{
-        await AsyncStorage.deletItem("@payment:user");
+    const signOut = async () => {
+        await AsyncStorage.removeItem("@payment:user");
 
         setUser({});
     };
 
-    
-
-    if (user?.autenticated === null ) {
-    
+    if (user?.authenticated === null) {
         return (
-    
-        <View style={{flex: 1 ,justifyContent:"center", alignItems:"center"}}>
-            <Text style={{fontSize: 28,marginTop: 15,}}>
-                Carregando todos dos Usuario
-            </Text>
-
-            <ActivityIndicator size="large" color="#00000f"/>
-
-        </View>
-        
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <Text style={{ fontSize: 28, marginTop: 15 }}>
+                    Carregando dados do usuário
+                </Text>
+                <ActivityIndicator size="large" color="#00000f" />
+            </View>
         );
-        
     }
 
-  
-
-
     return (
-         <AuthContext.Provider value = {{user,signIn,signOut}}>
+        <AuthContext.Provider value={{ user, signIn, signOut }}>
             {children}
-         </AuthContext.Provider>
-
+        </AuthContext.Provider>
     );
 }
 
-export function useAuth(){
+export function useAuth() {
     const context = useContext(AuthContext);
-    if(!context){
-        throw new Error("useAut must be used within an AuthProvider");
-
+    if (!context) {
+        throw new Error("useAuth must be used within an AuthProvider");
     }
     return context;
 }
