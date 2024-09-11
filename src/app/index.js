@@ -35,7 +35,7 @@ return (
       <Text style={styles.title}>Aplicativo pronto para usar</Text>
       
       <View style = {styles.inputbox}>
-        <Ionicons name="email-open-outline" size={20} color="black"/>
+        <Ionicons name="lock-closed-outline" size={20} color="black"/>
         <TextInput
          style={styles.emailinput}
           placebroder="E-mail" 

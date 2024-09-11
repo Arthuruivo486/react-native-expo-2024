@@ -1,7 +1,8 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { useUsersDatabase } from "../../database/useUsersDatabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator, Text, View } from "react-native";
+
 
 const AuthContext = createContext({});
 
@@ -25,10 +26,11 @@ export function AuthProvider({ children }) {
             const storageUser = await AsyncStorage.getItem("@payment:user");
 
             if (storageUser) {
+                const parsedUser = JSON.parse(storageUser);
                 setUser({
                     authenticated: true,
-                    user: JSON.parse(storageUser),
-                    role: JSON.parse(storageUser).role,
+                    user: parsedUser,
+                    role: parsedUser.role,
                 });
             } else {
                 setUser({
@@ -44,7 +46,6 @@ export function AuthProvider({ children }) {
 
     const signIn = async ({ email, password }) => {
         const response = await authUser({ email, password });
-        console.log(response);
 
         if (!response) {
             setUser({
@@ -67,7 +68,11 @@ export function AuthProvider({ children }) {
     const signOut = async () => {
         await AsyncStorage.removeItem("@payment:user");
 
-        setUser({});
+        setUser({
+            authenticated: false,
+            user: null,
+            role: null,
+        });
     };
 
     if (user?.authenticated === null) {
@@ -76,10 +81,12 @@ export function AuthProvider({ children }) {
                 <Text style={{ fontSize: 28, marginTop: 15 }}>
                     Carregando dados do usuário
                 </Text>
-                <ActivityIndicator size="large" color="#00000f" />
+                <ActivityIndicator size="large" color="#000000" />
             </View>
+
         );
     }
+    
 
     return (
         <AuthContext.Provider value={{ user, signIn, signOut }}>
@@ -89,9 +96,10 @@ export function AuthProvider({ children }) {
 }
 
 export function useAuth() {
-    const context = useContext(AuthContext);
+    const context = useContext(AuthContext); // Correção aqui, use AuthContext
     if (!context) {
-        throw new Error("useAuth must be used within an AuthProvider");
+        throw new Error("useAuth deve ser usado dentro de um AuthProvider.");
     }
+
     return context;
 }

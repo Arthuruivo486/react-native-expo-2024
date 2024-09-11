@@ -22,10 +22,10 @@ export function DataProvider ({children}){
 
 export function useData(){
     const context = useContext(DataCotext);
-    if (!context){
-
-        throw new Erro ('useData must be used within a DataProvider')
-    }
+    if (!context) {
+        throw new Error("useAuth must be used within an AuthProvider");
+      }
+      
     return context;
 
 }
