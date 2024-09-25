@@ -1,31 +1,22 @@
-import { createContext,useContext, useState } from "react";
 import { SQLiteProvider } from "expo-sqlite";
-import {initializeDatabase} from "../../database/initializaDatabase";
+import { createContext, useContext, useState } from "react";
+import { initializeDatabase } from "../../database/initializeDatabase";
 
+const DataContext = createContext({});
 
-const DataCotext = createContext({});
-
-
-
-export function DataProvider ({children}){
-
-    const[data, setData] = useState(false);
-
+export function DataProvider({ children }) {
+    const [data, setData] = useState(false);
     return (
-        <DataCotext.Provider value={{data}}>
-            <SQLiteProvider databaseName = "data.db" onInit={initializeDatabase}>
-            {children}
-            </SQLiteProvider>
-        </DataCotext.Provider>
+        <DataContext.Provider value={{ data }}>
+           <SQLiteProvider databaseName="data.db" onInit={initializeDatabase} >{children}</SQLiteProvider> 
+        </DataContext.Provider>
     );
 }
 
-export function useData(){
-    const context = useContext(DataCotext);
+export function useData() {
+    const context = useContext(DataContext);
     if (!context) {
-        throw new Error("useAuth must be used within an AuthProvider");
-      }
-      
+        throw new Error('useData must be used within a DataProvider');
+    }
     return context;
-
 }

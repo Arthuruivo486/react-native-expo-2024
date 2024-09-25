@@ -1,100 +1,89 @@
 import { StatusBar } from 'expo-status-bar';
-import { BackHandler, Button, StyleSheet, Text, TextInput, View } from 'react-native';
-
-import {useAuth} from "../hooks/Auth";
-import { router } from "expo-router";
-import {Ionicons} from "@expo/vector-icons"
+import { Alert, BackHandler, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useAuth } from '../hooks/Auth';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 
-
-
-
 export default function App() {
-  const {singIn, SignOut} = useAuth();
-  const [email,setEmail] = useState("super@gmail.com");
-  const [password, setPassowd] = useState("A123456a!");
-  const [passwordVisivility, setPassowdVisibiity] = useState(false);
-  
-  const tooglePasswordVisibility = () =>{
-    setPassowdVisibiity(!passwordVisivility);
-  };
 
-  const handleEntrarSuper = async() =>{
-    try{
-      await singIn({email, password})
-      router.replace("/")
+  const { signIn, signOut } = useAuth();
+  const [email, setEmail] = useState("super@email.com");
+  const [password, setPassword] = useState("A123456!");
+  const [passwordVisibility, setpasswordVisibility] = useState(false);
 
-    }catch (error){
-      alert.alert("Erro",error.message);
-      console.log(error)
+  const tooglePasswordVisibility = () => {
+    setpasswordVisibility(!passwordVisibility);
+  }
+
+  const handleEntrarSuper = async () => {
+    try {
+      await signIn({ email, password});
+      router.replace("/");
+    } catch (error) {
+      Alert.alert("Erro", error.message);
+      console.log(error);
     }
-  };
+  }
 
-return (
+
+
+  return (
     <View style={styles.container}>
-      <Text style={styles.title}>Aplicativo pronto para usar</Text>
       
-      <View style = {styles.inputbox}>
-        <Ionicons name="lock-closed-outline" size={20} color="black"/>
-        <TextInput
-         style={styles.emailinput}
-          placebroder="E-mail" 
-          vaule={email} 
-          onChangeText={setEmail}/>
-      </View>
-      <View style = {styles.inputbox}>
-        <Ionicons name="lock-closed-outline" size={20} color="black"/>
-        <TextInput
-         style={styles.emailinput}
-          placebroder="Senha" 
-          vaule={password} 
-          onChangeText={setPassowd}/>
-          secureTextEntry={passwordVisivility}
+      <View style={styles.inputbox}>
+         <Ionicons name="person" size={20} color='#4169E1' />
 
-          <Ionicons 
-          name={passwordVisivility? "eye-off-outline ": "eye-outline"} 
-          size={20} 
-          color="black" 
-          onPress={tooglePasswordVisibility}/>
+         <TextInput placeholder='E-mail' value={email} onChangeText={setEmail} style={styles.emailInput} />
       </View>
 
-      <Button style={styles.button} title="Entrar"onPress={handleEntrarSuper}/>
-     
-    
-      <Button title ="sobre " onPress={()=>router.push("/about")}/>
-      <Button title="Sair do aplicativo"
-       onPress={()=>BackHandler.exitApp()}
-       
-       />
+      <View style={styles.inputbox}>
+         <Ionicons name="lock-closed-outline" size={20} color='black' />
+
+         <TextInput placeholder='Senha' value={password} onChangeText={setPassword} secureTextEntry={passwordVisibility} style={styles.emailInput}  />
+
+         <Ionicons name={passwordVisibility ?  "eye-off-outline" : "eye-outline" } size={20} color='#4169E1' onPress={tooglePasswordVisibility} />
+         
+      </View>
+
+
+      <Button title="Entrar" onPress={handleEntrarSuper} style={styles.button} />
       <StatusBar style="auto" />
+
+      <Button title="Sobre" onPress={() => router.push("/about")} />
+
+      <Button title="Sair do Aplicativo" onPress={() => BackHandler.exitApp()} />
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    gap: 15,
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    gap:15,
   },
-  title: {
-    fontFamily:"bold",
-    fontSize:20,
+  inputbox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    margin: 20,
   },
-  inputbox:{
-    flexDirection:"row",
-    gap:10,
-    marginVertical:10,
-    alignItems:"center"
+  emailInput: {
+    color:"white",
+    flex: 1,
+    fontFamily:'bold',
+    fontSize: 20 ,
+    backgroundColor:"#4169E1",
+    borderRadius:10,
+    padding:5,
   },
-  emailinput:{
-    flex:1,
-    fontFamily:"regular",
-    fontSize:20,
-  },
-  button:{
-    width:"100%"
+  button: {
+    flex: 1,
+   
   }
 });

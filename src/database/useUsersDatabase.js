@@ -1,26 +1,27 @@
 import { useSQLiteContext } from "expo-sqlite";
 
-export function useUsersDatabase(){
-    const database = useSQLiteContext();
+export function useUsersDatabase() {
 
-    async function authUser({email,password}) {
+    const databse = useSQLiteContext();
 
-        console.log("aythUser email: ", email, "-password");
+    async function authUser({ email, password }) {
+        //console.log("authUser email: ", email, " - password", password);
+
         try {
-            const result =await database.fetFirstAsync(`
-                SELECT id, nome, email, role FROM users where email = '$(email)' and senha= '$(password)'
-                `)
+            const result = await databse.getFirstAsync(`
+            SELECT id, nome, email role FROM users WHERE emaiL='${email}' and senha='${password}'
+        `);
+
             return result;
-            
-        }catch (error){
+
+        } catch (error) {
             console.error("useUsersDatabase authUser error: ", error);
             throw error;
         }
-        
+
     }
-    return{
+
+    return {
         authUser,
     };
-    
-    
 }

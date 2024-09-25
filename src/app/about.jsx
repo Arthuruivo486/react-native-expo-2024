@@ -1,12 +1,13 @@
-import { router } from "expo-router"
-import { Button,Text,View } from "react-native"
+import { router } from "expo-router";
+import { Button, Text, View } from "react-native";
+import { useData } from "../hooks/Data";
 
-export default function About(){
-    return(
-        <View style={{flex: 1,justifyContent:"center" , alingItems: "center"}}>
+export default function About() {
+    const { data } = useData();
+    return (
+        <View style={{flex: 1, justifyContent:"center", alignItems: "center"}}>
             <Text>Sobre</Text>
-            <Button title = "voltar" onPress={()=>{router.replace("/")}}/>
+            <Button title="Voltar" onPress={() => (router.replace("/"))} />
         </View>
-    )
-
+    );
 }

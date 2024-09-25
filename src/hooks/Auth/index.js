@@ -1,55 +1,57 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useEffect, useState } from "react"
 import { useUsersDatabase } from "../../database/useUsersDatabase";
+import { ReloadInstructions } from "react-native/Libraries/NewAppScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ActivityIndicator, Text, View } from "react-native";
 
-
 const AuthContext = createContext({});
 
-export const ROLE = {
-    SUPER: "SUPER",
-    ADM: "ADM",
-    USER: "USER"
-};
+export const Role = {
+    SUPER: 'SUPER',
+    ADM: 'ADM',
+    USER: 'USER'
+}
 
 export function AuthProvider({ children }) {
+
+
+
     const [user, setUser] = useState({
-        authenticated: null,
+        autenticated: null,
         user: null,
         role: null,
     });
 
-    const { authUser } = useUsersDatabase();
+    const {authUser} = useUsersDatabase();
 
-    useEffect(() => {
+    useEffect(()=> {
         const loadStorageData = async () => {
             const storageUser = await AsyncStorage.getItem("@payment:user");
 
             if (storageUser) {
-                const parsedUser = JSON.parse(storageUser);
                 setUser({
-                    authenticated: true,
-                    user: parsedUser,
-                    role: parsedUser.role,
+                    autenticated: true,
+                    user: JSON.parse(storageUser),
+                    role: JSON.parse(storageUser).role,
                 });
             } else {
                 setUser({
-                    authenticated: false,
+                    autenticated: false,
                     user: null,
                     role: null,
                 });
             }
         };
-
         loadStorageData();
     }, []);
 
     const signIn = async ({ email, password }) => {
+
         const response = await authUser({ email, password });
 
-        if (!response) {
+        if (!response){
             setUser({
-                authenticated: false,
+                autenticated: false,
                 user: null,
                 role: null,
             });
@@ -57,36 +59,30 @@ export function AuthProvider({ children }) {
         }
 
         await AsyncStorage.setItem("@payment:user", JSON.stringify(response));
+        
 
         setUser({
-            authenticated: true,
+            autenticated: true,
             user: response,
             role: response.role,
         });
+
     };
 
     const signOut = async () => {
         await AsyncStorage.removeItem("@payment:user");
+        setUser({});
+    }
 
-        setUser({
-            authenticated: false,
-            user: null,
-            role: null,
-        });
-    };
 
-    if (user?.authenticated === null) {
+    if (user?.autenticated === null) {
         return (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                <Text style={{ fontSize: 28, marginTop: 15 }}>
-                    Carregando dados do usuário
-                </Text>
-                <ActivityIndicator size="large" color="#000000" />
+            <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                <Text style={{fontSize:25, marginTop: 15}}>Carregado Dados do Usuário</Text>
+                <ActivityIndicator size={30} color="#202020" />
             </View>
-
         );
     }
-    
 
     return (
         <AuthContext.Provider value={{ user, signIn, signOut }}>
@@ -96,10 +92,13 @@ export function AuthProvider({ children }) {
 }
 
 export function useAuth() {
-    const context = useContext(AuthContext); // Correção aqui, use AuthContext
+
+    const context = useContext(AuthContext);
+
     if (!context) {
-        throw new Error("useAuth deve ser usado dentro de um AuthProvider.");
+        throw new Error('useAuth must be used within an AuthProvider');
     }
 
     return context;
+
 }

@@ -1,74 +1,76 @@
-import { StyleSheet,Text,View } from "react-native";
+import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import PagerView from "react-native-pager-view";
 
-export function Banner(){
+export function Banner() {
 
-    const [page,setpage] = useState(0);
+    const [page, setPage] = useState(0);
 
-    const onPageSelected=(e )=> {
+    const onPageSelected = (e) => {
         setPage(e.nativeEvent.position);
-    };
-    return(
-    
-        <View style={styles.contaner}>
-            <PagerView intinalPage={0} style={styles.content} 
-            onPageSelected={onPageSelected}>
-                <View key="1" style={styles.page}>
+    }
+
+    return (
+        <View style={styles.container}>
+            <PagerView initialPage={0} style={styles.content} onPageSelected={onPageSelected}>
+                <View key="1"style={[styles.page, { backgroundColor: '#ADD8E6' }]}>
                     <Text style={styles.text}>Banner 1</Text>
-
                 </View>
-                <View key="2" style={styles.page}>
+                <View key="2" style={[styles.page, { backgroundColor: '#87CEEB' }]}>
                     <Text style={styles.text}>Banner 2</Text>
-
                 </View>
-                <View key="3" style={styles.page}>
+                <View key="3" style={[styles.page, { backgroundColor: '#4682B4' }]}>
                     <Text style={styles.text}>Banner 3</Text>
-
                 </View>
             </PagerView>
+
+
+
+
             <View style={styles.bulletContent}>
-                <View style={[styles.bullet, page === 0 && styles.activeBullet]}></View>
-                <View style={[styles.bullet, page === 1 && styles.activeBullet]}></View>
-                <View style={[styles.bullet, page === 2 && styles.activeBullet]}></View>
-          
-            
+                <View style={[styles.bullet, page === 0 && styles.activeBullet,{ backgroundColor: '#ADD8E6' },]}></View>
+                <View style={[styles.bullet, page === 0 && styles.activeBullet,{ backgroundColor: '#87CEEB' },]}></View>
+                <View style={[styles.bullet, page === 0 && styles.activeBullet,{ backgroundColor: '#4682B4' },]}></View>
             </View>
         </View>
     );
 }
-const styles = StyleSheet.create({
 
-    contaner:{
-        flex:1,
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
     },
-    content:{
-        marginTop:10,
-        height:100,
-        alignItems:"center",
-        justifyContent:"center",
-        width:"100%"
+    content: {
+        marginTop: 10,
+        height: 100,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%',
     },
     page: {
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor:"#fff",
-        padding:10,
+        backgroundColor: '#e8ede7',
+        padding: 20,
     },
-    bulletContent:{
-        flexDirection:"row",
-        justifyContent:"center",
-        alignItems:"center",
-
+    bulletContent: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    bullet:{
-        width:10,
-        height:10,
-        borderRadius:5,
-        margin:10,
-        backgroundColor:"#999",
+    bullet: {
+        width: 10,
+        height: 10,
+        
+        backgroundColor: '#999',
+        margin: 5,
     },
-    activeBullet:{
-        backgroundColor:"#000"
-
-    }
+    activeBullet: {
+        backgroundColor: '#8da59f',
+    },
+    text: {
+        fontSize: 40,
+        fontFamily: 'bold',
+        color: '#fff',
+    },
 });
