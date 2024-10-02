@@ -13,13 +13,13 @@ export function Banner() {
     return (
         <View style={styles.container}>
             <PagerView initialPage={0} style={styles.content} onPageSelected={onPageSelected}>
-                <View key="1"style={[styles.page, { backgroundColor: '#ADD8E6' }]}>
+                <View key="1"style={[styles.page, { backgroundColor: '#4169E1' }]}>
                     <Text style={styles.text}>Banner 1</Text>
                 </View>
-                <View key="2" style={[styles.page, { backgroundColor: '#87CEEB' }]}>
+                <View key="2" style={[styles.page, { backgroundColor: '#1E90FF' }]}>
                     <Text style={styles.text}>Banner 2</Text>
                 </View>
-                <View key="3" style={[styles.page, { backgroundColor: '#4682B4' }]}>
+                <View key="3" style={[styles.page, { backgroundColor: '#87CEEB' }]}>
                     <Text style={styles.text}>Banner 3</Text>
                 </View>
             </PagerView>
@@ -28,9 +28,9 @@ export function Banner() {
 
 
             <View style={styles.bulletContent}>
-                <View style={[styles.bullet, page === 0 && styles.activeBullet,{ backgroundColor: '#ADD8E6' },]}></View>
+                <View style={[styles.bullet, page === 0 && styles.activeBullet,{ backgroundColor: '#4169E1' },]}></View>
+                <View style={[styles.bullet, page === 0 && styles.activeBullet,{ backgroundColor: '#1E90FF' },]}></View>
                 <View style={[styles.bullet, page === 0 && styles.activeBullet,{ backgroundColor: '#87CEEB' },]}></View>
-                <View style={[styles.bullet, page === 0 && styles.activeBullet,{ backgroundColor: '#4682B4' },]}></View>
             </View>
         </View>
     );

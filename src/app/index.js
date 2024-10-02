@@ -1,24 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
-import { Alert, BackHandler, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, BackHandler, Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useAuth } from '../hooks/Auth';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
 
 export default function App() {
-
-  const { signIn, signOut } = useAuth();
+  const { signIn } = useAuth();
   const [email, setEmail] = useState("super@email.com");
   const [password, setPassword] = useState("A123456!");
-  const [passwordVisibility, setpasswordVisibility] = useState(false);
+  const [passwordVisibility, setPasswordVisibility] = useState(false);
 
-  const tooglePasswordVisibility = () => {
-    setpasswordVisibility(!passwordVisibility);
+  const togglePasswordVisibility = () => {
+    setPasswordVisibility(!passwordVisibility);
   }
 
   const handleEntrarSuper = async () => {
     try {
-      await signIn({ email, password});
+      await signIn({ email, password });
       router.replace("/");
     } catch (error) {
       Alert.alert("Erro", error.message);
@@ -26,64 +25,100 @@ export default function App() {
     }
   }
 
-
-
   return (
     <View style={styles.container}>
-      
-      <View style={styles.inputbox}>
-         <Ionicons name="person" size={20} color='#4169E1' />
+      <Text style={styles.title}>Bem-vindo ao seu Aplicativo</Text>
 
-         <TextInput placeholder='E-mail' value={email} onChangeText={setEmail} style={styles.emailInput} />
+      <View style={styles.inputBox}>
+        <Ionicons name="person" size={20} color='#4169E1' />
+        <TextInput
+          placeholder='E-mail'
+          value={email}
+          onChangeText={setEmail}
+          style={styles.input}
+        />
       </View>
 
-      <View style={styles.inputbox}>
-         <Ionicons name="lock-closed-outline" size={20} color='black' />
-
-         <TextInput placeholder='Senha' value={password} onChangeText={setPassword} secureTextEntry={passwordVisibility} style={styles.emailInput}  />
-
-         <Ionicons name={passwordVisibility ?  "eye-off-outline" : "eye-outline" } size={20} color='#4169E1' onPress={tooglePasswordVisibility} />
-         
+      <View style={styles.inputBox}>
+        <Ionicons name="lock-closed-outline" size={20} color='black' />
+        <TextInput
+          placeholder='Senha'
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={!passwordVisibility}
+          style={styles.input}
+        />
+        <TouchableOpacity onPress={togglePasswordVisibility}>
+          <Ionicons name={passwordVisibility ? "eye-off-outline" : "eye-outline"} size={20} color='#4169E1' />
+        </TouchableOpacity>
       </View>
 
+      <TouchableOpacity style={styles.button} onPress={handleEntrarSuper}>
+        <Text style={styles.buttonText}>Entrar</Text>
+      </TouchableOpacity>
 
-      <Button title="Entrar" onPress={handleEntrarSuper} style={styles.button} />
       <StatusBar style="auto" />
 
-      <Button title="Sobre" onPress={() => router.push("/about")} />
+      <TouchableOpacity style={styles.linkButton} onPress={() => router.push("/about")}>
+        <Text style={styles.linkText}>Sobre</Text>
+      </TouchableOpacity>
 
-      <Button title="Sair do Aplicativo" onPress={() => BackHandler.exitApp()} />
-
+      <TouchableOpacity style={styles.linkButton} onPress={() => BackHandler.exitApp()}>
+        <Text style={styles.linkText}>Sair do Aplicativo</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    gap: 15,
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 20,
   },
-  inputbox: {
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#4169E1',
+    marginBottom: 20,
+  },
+  inputBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    margin: 20,
+    marginVertical: 10,
+    width: '100%',
   },
-  emailInput: {
-    color:"white",
+  input: {
     flex: 1,
-    fontFamily:'bold',
-    fontSize: 20 ,
-    backgroundColor:"#4169E1",
-    borderRadius:10,
-    padding:5,
+    fontSize: 18,
+    color: '#000',
+    backgroundColor: "#E8E8E8",
+    borderRadius: 10,
+    padding: 10,
+    marginLeft: 10,
   },
   button: {
-    flex: 1,
-   
-  }
+    backgroundColor: '#4169E1',
+    borderRadius: 10,
+    padding: 15,
+    alignItems: 'center',
+    width: '100%',
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  linkButton: {
+    marginTop: 10,
+  },
+  linkText: {
+    color: '#4169E1',
+    
+    fontSize: 16,
+    
+  },
 });

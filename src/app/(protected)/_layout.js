@@ -37,7 +37,7 @@ function CustomDrawerContent(props) {
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
-      <TouchableOpacity onPress={() => signOut()} style={styles.desligar}><Text style={{ fontSize: 20, fontFamily: 'bold', color: '#ffff' }}>Sair</Text></TouchableOpacity>
+      <TouchableOpacity onPress={() => signOut()} style={styles.desligar}><Text style={{ fontSize: 20, fontFamily: 'bold', color: '#ffff', }}>Sair</Text></TouchableOpacity>
 
 
     </View >
@@ -47,11 +47,11 @@ function CustomDrawerContent(props) {
 
 const DrawerLayout = () => {
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#143630' }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#4169E1' }}>
       <Drawer drawerContent={(props) => <CustomDrawerContent {...props} />}>
-        <Drawer.Screen name="index" options={{ drawerLabel: "inicio", headerTitle: "Principal", drawerIcon: () => <Ionicons name="home" size={20} color="#ADD8E6" /> }} />
-        <Drawer.Screen name="list" options={{ drawerLabel: "Listagem", headerTitle: "Listagem", drawerIcon: () => <Ionicons name="list" size={20} color="#87CEEB" /> }} />
-        <Drawer.Screen name="payment" options={{ drawerLabel: "Pagamentos", headerTitle: "Pagamentos", drawerIcon: () => <Ionicons name="diamond-outline" size={20} color="#4682B4" /> }} />
+        <Drawer.Screen name="index" options={{ drawerLabel: "inicio", headerTitle: "Principal", drawerIcon: () => <Ionicons name="home" size={20} color="#4169E1" /> }} />
+        <Drawer.Screen name="list" options={{ drawerLabel: "Listagem", headerTitle: "Listagem", drawerIcon: () => <Ionicons name="list" size={20} color="#4169E1" /> }} />
+        <Drawer.Screen name="payment" options={{ drawerLabel: "Pagamentos", headerTitle: "Pagamentos", drawerIcon: () => <Ionicons name="diamond-outline" size={20} color="#4169E1" /> }} />
       </Drawer>
     </GestureHandlerRootView>
   );
