@@ -11,7 +11,7 @@ export default function About() {
             <Text style={styles.description}>
                 Aqui você pode adicionar informações sobre o aplicativo, sua finalidade e qualquer outro detalhe relevante.
             </Text>
-            <TouchableOpacity style={styles.button} onPress={() => router.replace("/")}>
+            <TouchableOpacity style={styles.button} onPress={() => router.back()}>
                 <Text style={styles.buttonText}>Voltar</Text>
             </TouchableOpacity>
         </View>
