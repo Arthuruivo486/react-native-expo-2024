@@ -24,7 +24,8 @@ const paymentScheema = z.object({
   user_id: z.number().int().positive(),
   user_cadastro: z.number().int().positive(),
   data_pagamento: z.date(),
-  observacao: z.string(),
+  numero_recibo: z.string(),
+  observacao: z.string().optional(),
 
 })
 
@@ -74,6 +75,7 @@ export default function Payment() {
   const [data, setData] = useState(new Date());
   const [viewCalendar, setViewCalendar] = useState(false)
   const [observacao, setObservacao] = useState("")
+  const [numeroRecibo, setNumeroRecibo] = useState("")
   const valueRef = useRef();
   const { user } = useAuth()
   const { createPayment } = usePaymentsDatabase();
@@ -139,6 +141,7 @@ const handleSubmit = async () => {
     user_cadastro: Number(user.user.id),
     valor_pago: convertValue(valor),
     data_pagamento: data,
+    numero_recibo: numeroRecibo,
     observacao,
   };
 
@@ -147,8 +150,10 @@ const handleSubmit = async () => {
     const { insertedID } = await createPayment(payment);
     console.log("Dados validados com sucesso:", result);
     console.log(insertedID)
+    setNumeroRecibo("");
   } catch (error) {
-    console.error("Erro de validação:", error.errors || error.message);
+    Alert.alert("Erro", `Erro de validação: ${error.mensage}`)
+    console.log(error);
   }
 };
 
@@ -159,7 +164,7 @@ return (
     style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"}
   >
 
-    <View style={styles.content}>
+     <View style={styles.content}>
       <Text>Incerir Pagamentos</Text>
       <View style={styles.inputView}>
         <Ionicons name="wallet-outline" size={24} color="black" />
@@ -170,6 +175,19 @@ return (
           value={valor}
           onChangeText={(newValue) => handleChargeValor(newValue)}
           ref={valueRef}
+        />
+      </View>
+
+      
+      <Text>Recibo</Text>
+      <View style={styles.inputView}>
+        <Ionicons name="cash-outline" size={24} color="black" />
+        <TextInput
+          placeholder="Numero do recibo"
+          keyboardType="numeric"
+          style={styles.inputValor}
+          value={numeroRecibo}
+          onChangeText={setNumeroRecibo}
         />
       </View>
       <View style={styles.inputView}>
