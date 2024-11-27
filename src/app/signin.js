@@ -1,124 +1,149 @@
-import { StatusBar } from 'expo-status-bar';
-import { Alert, BackHandler, Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { useAuth } from '../hooks/Auth';
-import { router } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { StatusBar } from "expo-status-bar";
+import { Alert, BackHandler, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { useAuth } from "../hooks/Auth";
+import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import { LinearGradient } from 'expo-linear-gradient'; // Importando o LinearGradient
 
 export default function App() {
-  const { signIn } = useAuth();
+  const { signIn, signOut } = useAuth();
   const [email, setEmail] = useState("super@email.com");
-  const [password, setPassword] = useState("A123456!");
+  const [password, setPassword] = useState("A123456a!");
   const [passwordVisibility, setPasswordVisibility] = useState(false);
 
-  const togglePasswordVisibility = () => {
+  const tooglePasswordVisibility = () => {
     setPasswordVisibility(!passwordVisibility);
-  }
+  };
 
   const handleEntrarSuper = async () => {
     try {
       await signIn({ email, password });
-      router.replace("/");
     } catch (error) {
       Alert.alert("Erro", error.message);
       console.log(error);
     }
-  }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Bem-vindo ao seu Aplicativo</Text>
+    <LinearGradient
+      colors={['#8B0505', '#FF6262']} // Gradiente da parte escura para a parte clara
+      style={styles.container}
+    >
+      <Image
+        source={require("../assets/logo.png")}
+        style={styles.logo}
+        resizeMode="contain"
+      />
 
-      <View style={styles.inputBox}>
-        <Ionicons name="person" size={20} color='#4169E1' />
+      <View style={styles.inputbox}> 
+        <Ionicons name="mail-open-outline" size={20} color="#8B0505" />
         <TextInput
-          placeholder='E-mail'
+          style={styles.emailinput}
+          placeholder="E-mail"
           value={email}
           onChangeText={setEmail}
-          style={styles.input}
-        />
-      </View>
+        /> 
+      </View> 
 
-      <View style={styles.inputBox}>
-        <Ionicons name="lock-closed-outline" size={20} color='black' />
+      <View style={styles.inputbox}>
+        <Ionicons name="lock-closed-outline" size={20} color="#8B0505" />
         <TextInput
-          placeholder='Senha'
+          style={styles.emailinput}
+          placeholder="Senha"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry={!passwordVisibility}
-          style={styles.input}
+          secureTextEntry={passwordVisibility}
         />
-        <TouchableOpacity onPress={togglePasswordVisibility}>
-          <Ionicons name={passwordVisibility ? "eye-off-outline" : "eye-outline"} size={20} color='#4169E1' />
-        </TouchableOpacity>
+        <Ionicons
+          name={passwordVisibility ? "eye-off-outline" : "eye-outline"}
+          size={20}
+          color="#8B0505"
+          onPress={tooglePasswordVisibility}
+        />
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleEntrarSuper}>
-        <Text style={styles.buttonText}>Entrar</Text>
+      {/* Botão Entrar com ícone */}
+      <TouchableOpacity onPress={handleEntrarSuper} style={styles.button}>
+        <Ionicons name="log-in-outline" size={20} color="white" />
+        <Text style={styles.textbutton}>Entrar</Text>
+      </TouchableOpacity>
+
+      {/* Botão Sobre com ícone */}
+      <TouchableOpacity onPress={() => router.push("about")} style={styles.button}>
+        <Ionicons name="information-circle-outline" size={20} color="white" />
+        <Text style={styles.textbutton}>Sobre</Text>
+      </TouchableOpacity>
+
+      {/* Botão Sair com ícone */}
+      <TouchableOpacity onPress={() => BackHandler.exitApp()} style={styles.button}>
+        <Ionicons name="exit-outline" size={20} color="white" />
+        <Text style={styles.textbutton}>Sair</Text>
       </TouchableOpacity>
 
       <StatusBar style="auto" />
-
-      <TouchableOpacity style={styles.linkButton} onPress={() => router.push("/about")}>
-        <Text style={styles.linkText}>Sobre</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.linkButton} onPress={() => BackHandler.exitApp()}>
-        <Text style={styles.linkText}>Sair do Aplicativo</Text>
-      </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#4169E1',
-    marginBottom: 20,
-  },
-  inputBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 10,
-    width: '100%',
-  },
-  input: {
-    flex: 1,
-    fontSize: 18,
-    color: '#000',
-    backgroundColor: "#E8E8E8",
-    borderRadius: 10,
+  logo: {
+    width: 220,
+    height: 220,
+    marginBottom: 40,
+    borderWidth: 4,
+    borderRadius: 50,
     padding: 10,
-    marginLeft: 10,
+  },
+  inputbox: {
+    flexDirection: "row",
+    gap: 12,
+    marginVertical: 15,
+    alignItems: "center",
+    backgroundColor: '#fff',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 14,
+    width: '80%',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  emailinput: {
+    flex: 1,
+    fontFamily: "regular",
+    fontSize: 18,
+    color: '#333',
+    paddingLeft: 10,
   },
   button: {
-    backgroundColor: '#4169E1',
-    borderRadius: 10,
-    padding: 15,
-    alignItems: 'center',
-    width: '100%',
-    marginTop: 10,
+    flexDirection: "row", // Para alinhar ícone e texto horizontalmente
+    alignItems: "center", // Alinhar ícone e texto ao centro
+    borderColor: 'white',
+    borderWidth: 4,
+    paddingLeft:76,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    alignSelf: 'center',
+    marginVertical: 10,
+    width: '80%',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
   },
-  buttonText: {
-    color: '#fff',
+  textbutton: {
+    color: 'white',
     fontSize: 18,
-    fontWeight: 'bold',
-  },
-  linkButton: {
-    marginTop: 10,
-  },
-  linkText: {
-    color: '#4169E1',
-    
-    fontSize: 16,
-    
+    textAlign: 'center',
+    marginLeft: 10, // Espaço entre o ícone e o texto
   },
 });

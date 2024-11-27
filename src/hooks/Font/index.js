@@ -12,6 +12,8 @@ export function FontProvider({ children }) {
         balck: require("../../assets/fonts/Montserrat-Black.ttf"),
         semibold: require("../../assets/fonts/Montserrat-SemiBold.ttf"),
         light: require("../../assets/fonts/Montserrat-Light.ttf"),
+        italic: require("../../assets/fonts/Montserrat-Italic.ttf"),
+       
     });
 
     if (!loaded && !error) {

@@ -1,6 +1,6 @@
-import { useSQLiteContext } from "expo-sqlite";
+import { useSQLiteContext } from "expo-sqlite"
 
-export function usePaymentsDatabase(){
+export function usePaymentsDatabase() {
     const database = useSQLiteContext();
 
     async function createPayment({
@@ -11,13 +11,12 @@ export function usePaymentsDatabase(){
         observacao,
         numero_recibo,
     }) {
-        const statement = await database.prepareAsync(`
-            INSERT INTO payments (user_id, user_cadastro, valor_pago, data_pagamento, observacao, numero_recibo) VALUES
-            ($user_id, $user_cadastro, $valor_pago, $data_pagamento, $observacao,$numero_recibo)
+        const statment = await database.prepareAsync(`
+            INSERT INTO payments (user_id, user_cadastro, valor_pago, data_pagamento, observacao, numero_recibo)
+            VALUES($user_id, $user_cadastro, $valor_pago, $data_pagamento, $observacao, $numero_recibo);
         `);
-
         try {
-            const result = await statement.executeAsync({
+            const result = await statment.executeAsync({
                 $user_id: user_id,
                 $user_cadastro: user_cadastro,
                 $valor_pago: valor_pago,
@@ -31,19 +30,51 @@ export function usePaymentsDatabase(){
             console.log(error);
             throw error;
         } finally {
-            await statement.finalizeAsync();
+            await statment.finalizeAsync();
         }
     }
 
     async function getPayments(page) {
         try {
-          const payments = await database.getAllAsync(`SELECT p.*, u.nome FROM payments p, users u WHERE u.id = p.user_id ORDER BY data_pagamento DESC LIMIT 5 OFFSET ${page * 5}`);
-          return payments;
+            const payments = await database.getAllAsync(`SELECT p.*, u.nome FROM payments p, users u WHERE u.id = p.user_id ORDER BY data_pagamento DESC LIMIT 5 OFFSET ${page * 5}`);
+            return payments;
         } catch (error) {
-          console.log(error);
-          throw error;
+            console.log(error);
+            throw error;
         }
-      }
-    
-      return { createPayment, getPayments };
-}          
+    }
+
+    async function getPayment(id) {
+        try {
+            const payment = await database.getFirstAsync(`SELECT p.*, u.nome FROM payments p, users u WHERE u.id = p.user_id AND p.id = ${id}`);
+            return payment;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async function setImagePayment(id, filenaem) {
+        const updated_at = new Date().toLocaleString("pt-BR").replace("T", " ").split(".")[0];
+        const statment = await database.prepareAsync(`
+            UPDATE payments SET imagem = $filename, updated_at = $updated_at WHERE id = $id;
+            `);
+
+        try {
+            const result = await statment.executeAsync({
+                $filename: filename,
+                $updated_at: updated_at,
+                $id: id,
+            });
+            return result.changes;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        } finally {
+            await statment.finalizeAsync();
+        }
+    }
+
+
+    return { createPayment, getPayments, getPayment, setImagePayment };
+}

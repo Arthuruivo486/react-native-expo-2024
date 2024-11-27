@@ -5,36 +5,31 @@ import { useEffect } from "react";
 
 
 const StackLayout = () => {
-
     const { user } = useAuth();
-    const segments = useSegments()
 
     useEffect(() => {
-        
-        if (!user?.autenticated) {
+        if (!user?.authenticated) {
             router.replace("signin")
+           // router.replace("maintense")  
         } else {
-           
-            router.replace("(protected)/list");
-
+            router.replace("(protected)/");
         }
-
     }, [user]);
 
-    return(
+    return (
         <Stack>
-            <Stack.Screen name="signin" options={{headerShown: false}} />
-            <Stack.Screen name="about" options={{headerShown: false}} />
-            <Stack.Screen name="(protected)" options={{headerShown: false}} />
+            <Stack.Screen name="signin" options={{ headerShown: false }} />
+            <Stack.Screen name="about" options={{ headerShown: false }} />
+            <Stack.Screen name="(protected)" options={{ headerShown: false }} />
         </Stack>
     );
 };
-
-
 export default function Layout() {
 
 
     return (
-        <AppProvider><StackLayout /></AppProvider>
+        <AppProvider>
+            <StackLayout />
+        </AppProvider>
     );
 }
